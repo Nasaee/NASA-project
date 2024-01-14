@@ -17,7 +17,8 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use(planetsRouter);
 app.use(launchesRouter);
-app.get('/', (req, res) => {
+// '/*' math any endpoint that is not matched above planets or launches our server just send to index.html file
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html')); // redirect to index.html
 });
 
