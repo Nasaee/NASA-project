@@ -113,6 +113,30 @@ async function savePlanet(planet) {
 
 ---
 
+example:
+
+```js
+// find all documents
+await MyModel.find({});
+
+// find all documents named john and at least 18
+await MyModel.find({ name: 'john', age: { $gte: 18 } }).exec();
+
+// executes, name LIKE john and only selecting the "name" and "friends" fields
+await MyModel.find({ name: /john/i }, 'name friends').exec();
+
+// passing options
+await MyModel.find({ name: /john/i }, null, { skip: 10 }).exec();
+```
+
+## [👉 more details about Model.find()](<https://mongoosejs.com/docs/api/model.html#Model.find()>)
+
+## [👉 more details about Query Casting](https://mongoosejs.com/docs/tutorials/query_casting.html)
+
+---
+
+**Note:** .find
+
 ```js
 async function getAllPlanets() {
   return await planets.find(
@@ -125,13 +149,38 @@ async function getAllPlanets() {
 }
 ```
 
-**Note:** .find
-
 - first parameter: if we spacify {} it will find all the documents, if we specify for example {keplerName: "Kepler-62 f"} it will find only matching documents
 
 - second parameter: is optional to use query filters,
 
-example:
+the following code is used to filter out (exclude) the \_id and \_\_v in the response object
+
+```js
+ {
+      _id: 0, // object id
+      __v: 0, // version key
+    }
+```
+
+if we don't specify above parameters it will return
+
+```json
+[
+  {
+        "_id": "65aea695c8f27c59af010fcd",
+        "keplerName": "Kepler-296 f",
+        "__v": 0
+    },
+    {
+        "_id": "65aea695c8f27c59af010fcf",
+        "keplerName": "Kepler-442 b",
+        "__v": 0
+    },
+    ...
+]
+```
+
+more example about .find() query:
 
 ```js
 // find all documents
