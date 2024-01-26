@@ -1,6 +1,6 @@
 const {
   getAllLaunches,
-  addNewLaunch,
+  scheduleNewLaunch,
   existsLaunchWithId,
   abortLaunchById,
 } = require('../../models/launches.model');
@@ -9,9 +9,8 @@ async function httpGetAllLaunches(req, res) {
   return res.status(200).json(await getAllLaunches()); // get value from Map() and put it in an array
 }
 
-function httpAddNewLaunch(req, res) {
+async function httpAddNewLaunch(req, res) {
   const launch = req.body;
-
   if (
     !launch.mission ||
     !launch.rocket ||
@@ -32,7 +31,8 @@ function httpAddNewLaunch(req, res) {
     });
   }
 
-  addNewLaunch(launch);
+  await scheduleNewLaunch(launch);
+  console.log(launch);
   return res.status(201).json(launch); // 201 means created
 }
 
