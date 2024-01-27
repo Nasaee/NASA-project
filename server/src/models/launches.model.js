@@ -1,8 +1,6 @@
 const launchesDatabase = require('./launches.mongo');
 const planets = require('./planets.mongo');
 
-const launches = new Map();
-
 const DEFAULT_FLIGHT_NUMBER = 100;
 
 const launch = {
@@ -27,9 +25,7 @@ async function saveLaunch(launch) {
   await launchesDatabase.findOneAndUpdate(
     { flightNumber: launch.flightNumber },
     launch,
-    {
-      upsert: true,
-    }
+    { upsert: true }
   );
 }
 // {upsert: true} in a MongoDB update operation. The upsert option specifies that if no document matches the update query, a new document will be created.
@@ -47,8 +43,9 @@ async function getLatestFlightNumber() {
   return latestLaunch.flightNumber;
 }
 
-function existsLaunchWithId(launchId) {
-  return launches.has(launchId);
+async function existsLaunchWithId(launchId) {
+  //find at least one document that matches the query (returns object or false)
+  return await launchesDatabase.findOne({ flightNumber: launchId });
 }
 
 async function getAllLaunches() {
@@ -75,11 +72,17 @@ async function scheduleNewLaunch(launch) {
 
   await saveLaunch(newLaunch);
 }
-function abortLaunchById(launchID) {
-  const aborted = launches.get(launchID);
-  aborted.upcoming = false;
-  aborted.success = false;
-  return aborted;
+async function abortLaunchById(launchID) {
+  // we dont add upsert here because we alrady know it's exists just update it
+  const aborted = await launchesDatabase.updateOne(
+    { flightNumber: launchID },
+    {
+      upcoming: false,
+      success: false,
+    }
+  );
+
+  return aborted.modifiedCount === 1;
 }
 
 module.exports = {
