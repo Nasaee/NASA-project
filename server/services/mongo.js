@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
-const MONGO_URL =
-  'mongodb+srv://nasa-api:PPY4AD2pvwty5Mu3@nasacluster.dbhasiv.mongodb.net/?retryWrites=true&w=majority';
+require('dotenv').config();
+
+const MONGO_URL = process.env.MONGO_URL;
 
 // .once() allow to callback only once at the first time it's executed.
 mongoose.connection.once('open', () => {
