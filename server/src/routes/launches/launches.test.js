@@ -1,12 +1,12 @@
-const request = require('supertest'); // for test http requests
+const request = require('supertest');
 const app = require('../../app');
-const { mongoConnect, mongoDisconnect } = require('../../../services/mongo');
-const { loadLaunchesData } = require('../../models/launches.model');
+const { mongoConnect, mongoDisconnect } = require('../../services/mongo');
+const { loadPlanetsData } = require('../../models/planets.model');
 
 describe('Launches API', () => {
   beforeAll(async () => {
     await mongoConnect();
-    await loadLaunchesData();
+    await loadPlanetsData();
   });
 
   afterAll(async () => {
@@ -22,7 +22,7 @@ describe('Launches API', () => {
     });
   });
 
-  describe('Test POST /launches', () => {
+  describe('Test POST /launch', () => {
     const completeLaunchData = {
       mission: 'USS Enterprise',
       rocket: 'NCC 1701-D',
@@ -48,11 +48,11 @@ describe('Launches API', () => {
         .post('/v1/launches')
         .send(completeLaunchData)
         .expect('Content-Type', /json/)
-        .expect(201); // 201 is created
+        .expect(201);
 
-      const requestDate = new Date(completeLaunchData.launchDate).valueOf(); //.valueOf() convert string to number
+      const requestDate = new Date(completeLaunchData.launchDate).valueOf();
       const responseDate = new Date(response.body.launchDate).valueOf();
-      expect(requestDate).toBe(responseDate);
+      expect(responseDate).toBe(requestDate);
 
       expect(response.body).toMatchObject(launchDataWithoutDate);
     });
@@ -68,6 +68,7 @@ describe('Launches API', () => {
         error: 'Missing required launch property',
       });
     });
+
     test('It should catch invalid dates', async () => {
       const response = await request(app)
         .post('/v1/launches')
