@@ -1,4 +1,7 @@
-const API_URL = 'http://localhost:8000/v1';
+/*
+remove url berefore v1 because client will know that it's should make request to the api that's living on the same address at the same origin
+ */
+const API_URL = 'v1';
 
 async function httpGetPlanets() {
   const response = await fetch(`${API_URL}/planets`);

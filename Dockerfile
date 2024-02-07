@@ -1,4 +1,4 @@
-FROM node:tls-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -52,3 +52,10 @@ EXPOSE 8000
 # run npm to start server to run server
 
 # Expose on port 8000
+
+
+# RUN COMMAND:
+# docker build . -t nasaee/nasa-project
+# docker run -it -p 8000:8000 nasaee/nasa-project 
+# docker login => to check is loged in or not
+# docker push nasaee/nasa-project => to push image to docker hub
